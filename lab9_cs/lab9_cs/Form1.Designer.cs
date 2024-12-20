@@ -261,6 +261,7 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             Text = "Контроль студентов";
+            Load += Form1_Load;
             crudZone.ResumeLayout(false);
             crudZone.PerformLayout();
             fileZone.ResumeLayout(false);

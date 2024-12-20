@@ -27,7 +27,7 @@ namespace lab9_cs
             InitializeComponent();
             LoadData();
             specBox.Items.AddRange(new string[] { "Информатика", "Экономика", "Математика" });
-      
+
             if (specBox.Items.Count > 0)
             {
                 specBox.SelectedIndex = 0;
@@ -61,13 +61,13 @@ namespace lab9_cs
                 if (isDarkTheme)
                 {
                     item.BackColor = (i % 2 == 0) ? System.Drawing.Color.FromArgb(50, 50, 50)
-                        : System.Drawing.Color.FromArgb(70, 70, 70); 
+                        : System.Drawing.Color.FromArgb(70, 70, 70);
                     item.ForeColor = System.Drawing.Color.White;
                 }
                 else
                 {
                     item.BackColor = (i % 2 == 0) ? System.Drawing.Color.WhiteSmoke
-                        : System.Drawing.Color.White; 
+                        : System.Drawing.Color.White;
                     item.ForeColor = System.Drawing.Color.Black;
                 }
 
@@ -95,7 +95,7 @@ namespace lab9_cs
             }
             else
             {
-                bookBox.BackColor = System.Drawing.Color.White; 
+                bookBox.BackColor = System.Drawing.Color.White;
             }
         }
 
@@ -264,51 +264,72 @@ namespace lab9_cs
         /// P ///
         /// O ///
         /// R ///  
-        /// T ///
+        /// T /// Устранена ошибка, когда приложение вылетало, если файл используется
 
         private void ImportJson(string filePath)
         {
-            var json = File.ReadAllText(filePath);
-            students = JsonConvert.DeserializeObject<List<Student>>(json) ?? new List<Student>();
-            nextId = students.Count > 0 ? students.Max(s => s.Id) + 1 : 1;
-            UpdateListView();
+            try
+            {
+                var json = File.ReadAllText(filePath);
+                students = JsonConvert.DeserializeObject<List<Student>>(json) ?? new List<Student>();
+                nextId = students.Count > 0 ? students.Max(s => s.Id) + 1 : 1;
+                UpdateListView();
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show($"Ошибка доступа к файлу: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void ImportXml(string filePath)
         {
-            var doc = XDocument.Load(filePath);
-            students = doc.Descendants("Student")
-                           .Select(s => new Student
-                           {
-                               Id = (int)s.Element("Id"),
-                               FullName = (string)s.Element("FullName"),
-                               StudentId = (string)s.Element("StudentId"),
-                               Major = (string)s.Element("Major")
-                           }).ToList();
-            nextId = students.Count > 0 ? students.Max(s => s.Id) + 1 : 1;
-            UpdateListView();
+            try
+            {
+                    var doc = XDocument.Load(filePath);
+                students = doc.Descendants("Student")
+                               .Select(s => new Student
+                               {
+                                   Id = (int)s.Element("Id"),
+                                   FullName = (string)s.Element("FullName"),
+                                   StudentId = (string)s.Element("StudentId"),
+                                   Major = (string)s.Element("Major")
+                               }).ToList();
+                nextId = students.Count > 0 ? students.Max(s => s.Id) + 1 : 1;
+                UpdateListView();
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show($"Ошибка доступа к файлу: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void ImportCsv(string filePath)
         {
-            var lines = File.ReadAllLines(filePath);
-            students.Clear();
-
-            foreach (var line in lines.Skip(1))
+            try
             {
-                var parts = line.Split(',');
-                if (parts.Length == 4 && int.TryParse(parts[0], out int id))
-                {
-                    students.Add(new Student
-                    {
-                        Id = id,
-                        FullName = parts[1],
-                        StudentId = parts[2],
-                        Major = parts[3]
-                    });
-                }
-            }
+                    var lines = File.ReadAllLines(filePath);
+                students.Clear();
 
-            nextId = students.Count > 0 ? students.Max(s => s.Id) + 1 : 1;
-            UpdateListView();
+                foreach (var line in lines.Skip(1))
+                {
+                    var parts = line.Split(',');
+                    if (parts.Length == 4 && int.TryParse(parts[0], out int id))
+                    {
+                        students.Add(new Student
+                        {
+                            Id = id,
+                            FullName = parts[1],
+                            StudentId = parts[2],
+                            Major = parts[3]
+                        });
+                    }
+                }
+
+                nextId = students.Count > 0 ? students.Max(s => s.Id) + 1 : 1;
+                UpdateListView();
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show($"Ошибка доступа к файлу: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         /// E ///
@@ -437,7 +458,7 @@ namespace lab9_cs
             // Переключаем тему
             isDarkTheme = !isDarkTheme;
 
-            
+
             if (isDarkTheme)
             {
                 this.BackColor = System.Drawing.Color.FromArgb(30, 30, 30); // Темный фон формы
@@ -495,6 +516,10 @@ namespace lab9_cs
             }
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
     public class Student
     {
