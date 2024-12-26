@@ -183,6 +183,20 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DATA_for_8_10lab\DATA_for_8_10lab\DATA\animedb.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DATA_for_8_10lab\DATA_for_8_10lab\DATA\animedb_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>animedb.mdf</DependentUpon>
+    </Content>
+    <Content Include="DATA_for_8_10lab\DATA_for_8_10lab\DATA\OOP_8.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DATA_for_8_10lab\DATA_for_8_10lab\DATA\OOP_8_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>OOP_8.mdf</DependentUpon>
+    </Content>
     <Content Include="images\LeftWhite.png" />
     <Content Include="images\LeftWhite2.png" />
     <Content Include="images\LeftWhite3.png" />
